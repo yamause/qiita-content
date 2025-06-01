@@ -1,13 +1,12 @@
 ---
 title: pip をプライベートな PyPIサーバーからインストールする方法（pypiserver）
-
 tags:
-  - python
+  - Python
   - pip
   - package
 private: false
-updated_at: ''
-id: null
+updated_at: '2025-06-02T00:08:36+09:00'
+id: e5586f17a20bed6868bf
 organization_url_name: null
 slide: false
 ignorePublish: false

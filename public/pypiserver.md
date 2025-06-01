@@ -70,7 +70,7 @@ hello world!!
 .
 ├── pyproject.toml
 └── src
-    └── sample-project
+    └── sample_project
         ├── __init__.py  # ファイルだけ作成して処理は記述しません
         ├── __main__.py  # CLIで呼び出されるエントリーポイントを定義します。
         └── main.py  # メインの処理を記述します。

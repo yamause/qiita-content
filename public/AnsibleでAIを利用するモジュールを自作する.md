@@ -62,6 +62,10 @@ localhost                  : ok=2    changed=0    unreachable=0    failed=0    s
 
 # 実装
 
+Gemini API を利用します。前提として、Googleアカウントを保有しており、APIキーの発行ができる状態でいる必要があります。
+
+APIキーの発行は [Google AI Studio](https://aistudio.google.com/app/apikey) から行ってください。
+
 ## ディレクトリ構成
 
 ディレクトリ構成は以下の通りです。
@@ -80,7 +84,7 @@ project
 
 1行目に shebang `#!/usr/bin/python` を記述します。これは `ansible_python_interpreter` が機能するために必要です。[^python-shebang-utf-8-coding]
 
-つづいて利用するパッケージをインポートします。今回は追加のインストールが不要な標準パッケージだけを利用しています。これは、このモジュールを利用したPlaybookを実行するのにPythonの依存関係による問題を発生させたくないがためです。
+つづいて利用するパッケージをインポートします。今回は追加のインストールが不要な標準パッケージだけを利用しています。これは、このモジュールを利用したPlaybookを実行する際に、Pythonの依存関係による問題を避けるためです。
 
 ```python:library/ai.py
 #!/usr/bin/python
@@ -162,7 +166,7 @@ class GeminiAgent(AiAgent):
                 msg=f"An unexpected error occurred: {str(e)}")
 ```
 
-### Ansibnleモジュールの定義
+### Ansibleモジュールの定義
 
 メイン処理を記述します。
 
@@ -287,7 +291,7 @@ def main():
 
 ここからはAIアシスタントへリクエストを実行し、結果を Ansible に返すまでを説明します。
 
-Playbook内で指定されたモジュールのパラメーターを `module.params['param_name']` で取得します。`
+Playbook内で指定されたモジュールのパラメーターを `module.params['param_name']` で取得します。
 
 `model` が `gemini-` から始まる場合、前の手順で定義した `GeminiAgent` からインスタンスを作成します。それ以外の場合は、サポート外としてエラーを返すようにします。
 
@@ -482,7 +486,7 @@ AIに挨拶をする簡単な Playbook を作成します。
       ai:
         text: "こんにちは！Ansibleからの挨拶です。"
         # api_key: APIキーを指定または、環境変数 AI_API_KEY を設定
-        # model: モデルを指定または、環境変数 AI_MODEL を設定
+        # model: モデルを指定または、環境変数 AI_MODEL を設定 (デフォルト: gemini-2.5-flash)
       register: result
 
     - name: Print the result
@@ -493,6 +497,8 @@ AIに挨拶をする簡単な Playbook を作成します。
 
 
 # 実行してみる
+
+事前にGemini APIキーを環境変数 `AI_API_KEY` に設定するか、Playbookで直接指定してください。
 
 ```shell
 ansible-playbook project/site.yml

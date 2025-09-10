@@ -3,8 +3,8 @@ title: 【Git ＆ GitHub CLI】ディレクトリ毎にアカウントを切り�
 tags:
   - 'Git'
   - 'GitHub'
-  - 'GitHub CLI'
-private: true
+  - 'GitHubCLI'
+private: false
 updated_at: ''
 id: null
 organization_url_name: null

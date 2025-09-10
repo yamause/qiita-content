@@ -1,14 +1,14 @@
 ---
 title: AnsibleでAIを利用するモジュールを自作する
 tags:
-  - 'Ansible'
-  - 'AI'
-  - '生成AI'
-  - 'Gemini'
-  - 'Python'
+  - Python
+  - Ansible
+  - AI
+  - Gemini
+  - 生成AI
 private: false
-updated_at: ''
-id: null
+updated_at: '2025-08-24T17:39:25+09:00'
+id: 0b92eb8417a4d7746698
 organization_url_name: null
 slide: false
 ignorePublish: false

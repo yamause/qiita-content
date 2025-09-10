@@ -178,4 +178,4 @@ https://qiita.com/yamause/items/b91308633404042b977c
 [Git Documentation - Git and Software Freedom Conservancy](https://git-scm.com/doc)
 
 [^1]: Git and Software Freedom Conservancy. “git-config” .Git - Documentation. 2025-08-18 . https://git-scm.com/docs/git-config#_conditional_includes, (閲覧 2025-09-10) .
-[^2]: @zimbatm. “direnv – unclutter your .profile”. direnv. 2025-08-18 . https://direnv.net/, (閲覧 2025-09-10) .
+[^2]: @zimbatm. “direnv – unclutter your .profile”. direnv. https://direnv.net/, (閲覧 2025-09-10) .

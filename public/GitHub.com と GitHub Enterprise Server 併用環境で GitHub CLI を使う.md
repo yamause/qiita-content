@@ -14,17 +14,17 @@ ignorePublish: false
 
 # 概要
 
-GitHub では GitHub CLI という GitHub上のリポジトリをCLIで操作できるコマンドが提供されています。このコマンドは GitHub Enterprise版でも利用することが可能であり、セルフホスト型の GitHub Enterprise Server でも同様に動作します。
+GitHubではGitHub CLIというGitHub上のリポジトリをCLIで操作できるコマンドが提供されています。このコマンドはGitHub Enterprise版でも利用でき、セルフホスト型のGitHub Enterprise Serverでも同様に動作します。
 
-複数のプラットフォームを併用した環境で GitHub CLI を利用し、アカウントを切り替える際に発生する問題とその解決策について記載します。
+複数のプラットフォームを併用した環境でGitHub CLIを利用し、アカウントを切り替える際に発生する問題とその解決策について記載します。
 
 # 問題
 
-GitHub CLI は複数のアカウントでのログインをサポートしており、 `gh auth switch` コマンドでアカウントを切り替えることが可能です。このとき、GitHub.com または、GitHub Enterprise Server のどちらか一方のプラットフォームだけを利用している場合は特に問題はありません。しかし、複数のプラットフォームでアカウントを切り替えて利用しようとすると問題が発生します。
+GitHub CLIは複数のアカウントでのログインをサポートしており、 `gh auth switch` コマンドでアカウントを切り替えられます。このとき、GitHub.comまたは、GitHub Enterprise Serverのどちらか一方のプラットフォームだけを利用している場合は特に問題ありません。しかし、複数のプラットフォームでアカウントを切り替えて利用しようとすると問題が発生します。
 
-GitHub CLI に複数のプラットフォームのアカウントが設定されているとき、GitHub CLI はデフォルトで GitHub.com の情報を参照するようになっています。つまりこの状況の時、GitHub Enterprise Server 上のリポジトリを参照したいにもかかわらず、GitHub CLI は GitHub.com 上のリポジトリしか参照しない。ということです。
+GitHub CLIに複数のプラットフォームのアカウントが設定されているとき、GitHub CLIはデフォルトでGitHub.comの情報を参照するようになっています。つまりこの状況の時、GitHub Enterprise Server上のリポジトリを参照したいにもかかわらず、GitHub CLIはGitHub.com上のリポジトリしか参照しない。ということです。
 
-そのため、複数のプラットフォームを併用している場合、GitHub CLI のターゲットホストを切り替える必要があります。しかし、現状の GitHub CLI にはそのようにターゲットホストを切り替える機能を持ちません。
+そのため、複数のプラットフォームを併用している場合、GitHub CLIのターゲットホストを切り替える必要があります。しかし、現状のGitHub CLIにはそのようにターゲットホストを切り替える機能を持ちません。
 
 このように `gh auth status` でアカウント情報は確認できますが `gh auth switch` ではターゲットホストを切り替えることはできません。
 
@@ -53,17 +53,17 @@ https://github.com/cli/cli/issues/10058
 What you're describing is the expected behaviour, as far as I can tell from your explanation. Logging in to a host doesn't switch the targeted host, it only stores a token. If you have authenticated against more than one host, `gh` will default to targeting github.com.
 
 > 日本語訳（Google翻訳）
-ご説明いただいた内容は、ご説明から判断する限り、想定通りの動作です。ホストにログインしても、ターゲットホストは切り替わらず、トークンが保存されるだけです。複数のホストで認証している場合、gh はデフォルトで [github.com](http://github.com/) をターゲットとします。
+ご説明いただいた内容は、ご説明から判断する限り、想定通りの動作です。ホストにログインしても、ターゲットホストは切り替わらず、トークンが保存されるだけです。複数のホストで認証している場合、ghはデフォルトで [github.com](http://github.com/) をターゲットとします。
 
 ここまでの話をまとめます。
 
-- GitHub CLI にはターゲットホストを切り替える機能がない
-- GitHub.com と GitHub Enterprise Server を設定するとGitHub CLI はデフォルトで GitHub.com だけを参照するようになっている。
+- GitHub CLIにはターゲットホストを切り替える機能がない
+- GitHub.comとGitHub Enterprise Serverを設定するとGitHub CLIはデフォルトでGitHub.comだけを参照するようになっている。
 
 
 # 解決策
 
-GitHub CLI は環境変数 `GH_HOST` が設定されている場合、そのエンドポイントを参照する仕様になっています。
+GitHub CLIは環境変数 `GH_HOST` が設定されている場合、そのエンドポイントを参照する仕様になっています。
 
 そのため、環境変数を設定することでターゲットホストを切り替えることができます。
 
@@ -71,7 +71,7 @@ GitHub CLI は環境変数 `GH_HOST` が設定されている場合、そのエ�
 export GH_HOST="git.example.com"
 ```
 
-より切り替えを簡単にするために、つぎのようにエイリアスを設定し、 `~/.bashrc` などに登録する方法もあります。こうすることで既存の環境を汚さずにエイリアスを用いた GitHub CLI の実行時にのみ変数をセットすることができます。
+より切り替えを簡単にするため、つぎのようにエイリアスを設定し、 `~/.bashrc` などに登録する方法もあります。こうすることで既存の環境を汚さずにエイリアスを用いたGitHub CLIの実行時にのみ変数をセットできます。
 
 ```
 alilas ghe="GH_HOST=git.example.com gh"
@@ -79,9 +79,9 @@ alilas ghe="GH_HOST=git.example.com gh"
 
 # あとがき
 
-最近、弊社でも AI コーディングの波を受け、GitHub.com を利用することが推奨されるようになりました。私の所属するチームでは主に GitHub Enterprise Server を利用していましたが、現在移行作業を進めています。そのため、二つのプラットフォームを並行して運用する中でアカウント切り替えでこの問題に遭遇したため、その際に調べたことを記事にまとめてみました。
+最近、弊社でもAIコーディングの波を受け、GitHub.comを利用することが推奨されるようになりました。私の所属するチームでは主にGitHub Enterprise Serverを利用していましたが、現在移行作業を進めています。そのため、2つのプラットフォームを並行して運用する中でアカウント切り替えの問題に遭遇し、その際に調べたことを記事にまとめてみました。
 
 # 参考情報
 
-GitHub, GitHub Docs, GitHub プラットフォーム間での GitHub CLI の使用(2025-05-13)
+GitHub, GitHub Docs, GitHubプラットフォーム間でのGitHub CLIの使用(2025-05-13)
 https://docs.github.com/ja/enterprise-cloud@latest/github-cli/github-cli/using-multiple-accounts

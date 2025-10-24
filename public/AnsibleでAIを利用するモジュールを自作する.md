@@ -16,9 +16,9 @@ ignorePublish: false
 
 # 概要
 
-Ansible の Playbook から Gemini などのAIアシスタントへ問い合わせをするモジュールを自作します。
+AnsibleのPlaybookからGeminiなどのAIアシスタントへ問い合わせをするモジュールを自作します。
 
-Ansibleモジュールとは普段 Playbook にタスクとして記述している処理のまとまりのことです。モジュールは Ansible によってターゲットノードに送信されターゲットノード上で実行されます。[^Introduction-to-modules]
+Ansibleモジュールとは普段Playbookにタスクとして記述している処理のまとまりのことです。モジュールはAnsibleによってターゲットノードに送信されターゲットノード上で実行されます。[^Introduction-to-modules]
 
 ```yaml
 - name: Example from an Ansible Playbook
@@ -26,8 +26,6 @@ Ansibleモジュールとは普段 Playbook にタスクとして記述してい
 ```
 
 # ゴール
-
-こんな Playbook を実行すると
 
 ```yaml
 - name: Hello AI
@@ -43,7 +41,7 @@ Ansibleモジュールとは普段 Playbook にタスクとして記述してい
   when: result.message is defined
 ```
 
-こうなる！
+このようなPlaybookを実行すると、以下の結果になります。
 
 ```text
 PLAY [Test Playbook] ***********************************************************************************************
@@ -62,7 +60,7 @@ localhost                  : ok=2    changed=0    unreachable=0    failed=0    s
 
 # 実装
 
-Gemini API を利用します。前提として、Googleアカウントを保有しており、APIキーの発行ができる状態でいる必要があります。
+Gemini APIを利用します。前提として、Googleアカウントを保有しており、APIキーの発行ができる状態でいる必要があります。
 
 APIキーの発行は [Google AI Studio](https://aistudio.google.com/app/apikey) から行ってください。
 
@@ -77,12 +75,12 @@ project
 └── site.yml  # 作成したモジュールを実行するための Playbook
 ```
 
-- **library/ai.py**: 自作するAnsibleモジュールです。今回は説明を簡単にするためコレクションではなくスタンドアロンのローカルモジュールとして実装します。Playbook と同じディレクトリ内の `library` の下に配置します。[^Adding-modules-and-plugins-locally][^default-module-path]
-- **site.yml**: 作成したモジュールを実行するための Playbook です
+- **library/ai.py**: 自作するAnsibleモジュールである。今回は説明を簡単にするためコレクションではなくスタンドアロンのローカルモジュールとして実装する。Playbookと同じディレクトリ内の `library` の下に配置する。[^Adding-modules-and-plugins-locally][^default-module-path]
+- **site.yml**: 作成したモジュールを実行するためのPlaybookである。
 
 ## Ansibleモジュールの作成
 
-1行目に shebang `#!/usr/bin/python` を記述します。これは `ansible_python_interpreter` が機能するために必要です。[^python-shebang-utf-8-coding]
+1行目にshebang `#!/usr/bin/python` を記述します。これは `ansible_python_interpreter` が機能するために必要です。[^python-shebang-utf-8-coding]
 
 つづいて利用するパッケージをインポートします。今回は追加のインストールが不要な標準パッケージだけを利用しています。これは、このモジュールを利用したPlaybookを実行する際に、Pythonの依存関係による問題を避けるためです。
 
@@ -109,9 +107,9 @@ class AiAgent(ABC):
         pass
 ```
 
-Gemini を利用する具象クラス `GeminiAgent` を作成します。
+Geminiを利用する具象クラス `GeminiAgent` を作成します。
 
-処理中にエラーが発生する場合は `fail_json()` 関数を利用します。これにより、Ansibleに問題が発生したことを伝えることができます。それ以外は特別なことはしていません。Gemini API の仕様にそってHTTP POSTリクエストを送信するだけです。
+処理中にエラーが発生する場合は `fail_json()` 関数を利用します。これにより、Ansibleに問題が発生したことを伝えることができます。それ以外に特別なことはしていません。Gemini APIの仕様にそってHTTP POSTリクエストを送信するだけです。
 
 ```python:library/ai.py:GeminiAgent
 class GeminiAgent(AiAgent):
@@ -260,9 +258,9 @@ def main():
     ...
 ```
 
-AnsibleModuleのコンストラクタの引数 `argument_spec` に `module_args` 変数を渡します。`supports_check_mode` は Ansible で `--check` などのオプションでの Dry run 実行をサポートするかを指定します。今回は `False` にしておきます。
+AnsibleModuleのコンストラクタの引数 `argument_spec` に `module_args` 変数を渡します。`supports_check_mode` は、Ansibleで `--check` などのオプションでのDry run実行をサポートするかを指定します。今回は `False` にしておきます。
 
-これでモジュールのパラメーターを定義することができました。
+これでモジュールのパラメーターを定義できました。
 
 ```python:library/ai.py:main
 def main():
@@ -275,7 +273,7 @@ def main():
     ...
 ```
 
-`result` 変数に最終的に Ansible に返す結果を辞書形式で定義します。ここで定義された値は Ansible の `register` オプションなどで参照することができます。 `changed` は予約されたパラメーターでシステムに変更を加えたかを表します。これは冪等性にかかわる重要な項目です。今回作成するモジュールはシステムへ変更を加えるものではないため `False` にしておきます。
+`result` 変数に最終的にAnsibleに返す結果を辞書形式で定義します。ここで定義された値はAnsibleの `register` オプションなどで参照できます。 `changed` は予約されたパラメーターでシステムに変更を加えたかを表します。これは冪等性にかかわる重要な項目です。今回作成するモジュールはシステムへ変更を加えるものではないため `False` にしておきます。
 
 ```python:library/ai.py:main
 def main():
@@ -289,7 +287,7 @@ def main():
     ...
 ```
 
-ここからはAIアシスタントへリクエストを実行し、結果を Ansible に返すまでを説明します。
+ここからはAIアシスタントへリクエストを実行し、結果をAnsibleに返すまでを説明します。
 
 Playbook内で指定されたモジュールのパラメーターを `module.params['param_name']` で取得します。
 
@@ -473,7 +471,7 @@ if __name__ == '__main__':
 
 ## Playbook の作成
 
-AIに挨拶をする簡単な Playbook を作成します。
+AIに挨拶をする簡単なPlaybookを作成します。
 
 ```yaml:site.yml
 ---
@@ -620,7 +618,7 @@ localhost                  : ok=2    changed=0    unreachable=0    failed=0    s
 
 なんでもいいので生成AIに絡んだ記事を書いてみたいという下心で書きました。
 
-Ansibleモジュールをはじめとした各種プラグインの開発をできるようになると Ansible の世界がぐっと広がります。既存のモジュールで実現できないか？を考えてそれでもいいのが見つからない...となれば自分で作ってみるのも一つの手です。
+Ansibleモジュールをはじめとした各種プラグインの開発をできるようになるとAnsibleの世界がぐっと広がります。既存のモジュールで実現できないかを考えてそれでもいいのが見つからない...となれば自分で作ってみるのも1つの手です。
 
 # 参考
 

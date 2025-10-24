@@ -33,23 +33,23 @@ ignorePublish: false
     └── private/        # 個人用ディレクトリ
 ```
 
-- `~/Dev/work` の配下で業務用のリポジトリを管理します。
-- `~/Dev/private` の配下で個人用のリポジトリを管理します。
+- `~/Dev/work` の配下で業務用のリポジトリを管理する。
+- `~/Dev/private` の配下で個人用のリポジトリを管理する。
 
-それぞれのディレクトリに移動したとき、自動的に Git & GitHub CLI アカウントを切り替えます。
+それぞれのディレクトリに移動したとき、自動的にGit & GitHub CLIアカウントを切り替えます。
 
 ## Gitアカウントを使い分ける
 
-まずはGitアカウントの使い分けから
+まずはGitアカウントの使い分けから紹介します。
 
 ### includeIf 設定をする
 
-includeIf は条件付きで別の構成ファイルを取り込むことができる機能です。[^1]これを利用して指定したディレクトリにいるときに異なる設定を使い分けます。
+includeIfは条件付きで別の構成ファイルを取り込むことができる機能です。[^1]これを利用して指定したディレクトリにいるとき、異なる設定を使い分けます。
 
 `~/.gitconfig` を設定します。
 
-- `[includeIf "gitdir:<directory>"]` ：固有の設定を適用したいディレクトリのパスを指定します。
-- `path = <config-file>` ：固有の設定を記述したファイルパスを指定します。
+- `[includeIf "gitdir:<directory>"]` ：固有の設定を適用したいディレクトリのパスを指定
+- `path = <config-file>` ：固有の設定を記述したファイルパスを指定
 
 ```sh
 [includeIf "gitdir:~/Dev/work/"]
@@ -61,7 +61,7 @@ includeIf は条件付きで別の構成ファイルを取り込むことがで�
 
 ### アカウントを登録する
 
-`~/.gitconfig_work` に業務用のアカウントを登録します。同様に `~/.gitconfig_private` に個人用のアカウントを登録します。
+`~/.gitconfig_work` に業務用のアカウントを登録し、同様に `~/.gitconfig_private` には個人用のアカウントを登録します。
 
 ```ini:~/.gitconfig_work
 [user]
@@ -75,14 +75,14 @@ includeIf は条件付きで別の構成ファイルを取り込むことがで�
     email = <個人メールアドレス>
 ```
 
-git init を実行することでこのディレクトリ配下のすべてのディレクトリに格納されたリポジトリで設定が反映されます。
+git initを実行することでこのディレクトリ配下のすべてのディレクトリに格納されたリポジトリで設定が反映されます。
 
 ```sh
 cd ~/Dev/work
 git init
 ```
 
-それぞれのディレクトリに移動し、想定したアカウントになっているか確認してみましょう。
+それぞれのディレクトリに移動し、想定したアカウントになっているか確認します。
 
 ```sh
 git config user.name
@@ -93,7 +93,7 @@ git config user.email
 
 つづいてGitHubアカウントの使い分けを紹介します。
 
-`gh auth login` で認証したアカウントよりも環境変数 `GH_TOKEN` に登録されているトークンを所有するアカウントが優先して適用されます。これを利用してアカウントを切り替えていきます。
+`gh auth login` で認証したアカウントよりも環境変数 `GH_TOKEN` に登録されているトークンを所有するアカウントが優先して適用されます。これを利用してアカウントを切り替えます。
 
 ちなみに `GH_TOKEN` が登録されていると常にそのアカウントが優先されるようになるため `gh auth switch` コマンドでアカウントを切り替えることができなくなります。※該当のディレクトリにいるときにのみ環境変数を設定するため今回これはあまり問題になりません。
 
@@ -114,12 +114,12 @@ github.com
   - Token scopes: 'admin:public_key', 'gist', 'read:org', 'repo', 'workflow'
 
 # ↑プライベートなPCからコマンド実行しているのでこの例で表示されているのは同じアカウントですが
-#  異なるアカウントにログインしている場合も同様に GH_TOKEN に設定されているアカウントが優先されます。
+# 異なるアカウントでログインしていても、同様に GH_TOKEN に設定されているアカウントが優先されます。
 ```
 
 ### GitHub CLI ログイン
 
-はじめに利用するGitHubアカウントにGitHub CLIからログインをしておきます。
+はじめに、利用するGitHubアカウントへGitHub CLIからログインをしておきます。
 
 ```sh
 gh auth login
@@ -127,11 +127,11 @@ gh auth login
 
 ### direnv の設定
 
-direnv を利用してディレクトリに入ったときに自動的に環境変数 `GH_TOKEN` が設定されるようにします。
+direnvを使い、ディレクトリに入ると自動的に環境変数 `GH_TOKEN` が設定されるようにします。
 
-direnv とは現在のディレクトリまたは親ディレクトリに配置され direnv によって承認された `.envrc` ファイルに記述された環境変数を自動的に設定できる優れものです。[^2]
+direnvとは現在のディレクトリまたは親ディレクトリに配置されdirenvによって承認された `.envrc` ファイルに記述された環境変数を自動的に設定できる優れものです。[^2]
 
-direnv のインストール方法は下記のドキュメントを参考にしてください。
+direnvのインストール方法は下記のドキュメントを参考にしてください。
 
 https://direnv.net/docs/installation.html
 
@@ -161,11 +161,11 @@ export GH_TOKEN=$(gh auth token --user <個人アカウント名>)
 
 以上！
 
-これでディレクトリに移動するだけでGitもGitHubも自動的にアカウントが切り替わります！
+これでディレクトリに移動するだけでGitとGitHubは自動的にアカウントが切り替わります！
 
 # あとがき
 
-わたしの所属している組織は GitHub Enterprise Server から GitHub Enterprise Cloud への移行期でありふたつの環境が併用されています。今回の手法はそのような環境でもとても有効でした。（わたしの所属するチームは最近やっとリポジトリをすべて移行させることができました！）
+わたしの所属している組織はGitHub Enterprise ServerからGitHub Enterprise Cloudへの移行期でありふたつの環境が併用されています。今回の手法はそのような環境でもとても有効でした。（わたしの所属するチームは最近やっとリポジトリをすべて移行させることができました！）
 
 
 # 関連記事
@@ -177,5 +177,5 @@ https://qiita.com/yamause/items/b91308633404042b977c
 [direnv - @zimbatm](https://direnv.net/)
 [Git Documentation - Git and Software Freedom Conservancy](https://git-scm.com/doc)
 
-[^1]: Git and Software Freedom Conservancy. “git-config” .Git - Documentation. 2025-08-18 . https://git-scm.com/docs/git-config#_conditional_includes, (閲覧 2025-09-10) .
-[^2]: @zimbatm. “direnv – unclutter your .profile”. direnv. https://direnv.net/, (閲覧 2025-09-10) .
+[^1]: Git and Software Freedom Conservancy. “git-config” .Git - Documentation. 2025-08-18 . https://git-scm.com/docs/git-config#_conditional_includes, (閲覧2025-09-10) .
+[^2]: @zimbatm. “direnv – unclutter your .profile”. direnv. https://direnv.net/, (閲覧2025-09-10) .

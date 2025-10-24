@@ -14,27 +14,27 @@ ignorePublish: false
 
 # はじめに
 
-自作したライブラリをローカル環境の PyPIサーバーからインストールしたい！と思いたったので pypiserver で構築してみました。
+自作したライブラリをローカル環境のPyPIサーバーからインストールしたい！と思いたったのでpypiserverで構築してみました。
 基本的には公式のドキュメント通りにやれば問題ないですが何かの参考になれば幸いです。
 
 つぎの手順で説明します。
 
-1. pypiserver の構築
+1. pypiserverの構築
 2. 自作パッケージの作成とパッケージのビルド
-3. pypiserver へのパッケージのアップロード
+3. pypiserverへのパッケージのアップロード
 
 # pypiserver の構築
 
-pypiserver はPythonパッケージとして PyPI に公開されており、pipコマンド経由でインストールすることができます。
-そのほか、Dockerコンテナも公式にサポートされており、Docker pull コマンドでダウンロードすることもできます。
-今回は、Dockerコンテナを用いて pypiserver を構築します。
+pypiserverはPythonパッケージとしてPyPIに公開されており、pipコマンド経由でインストールできます。
+そのほか、Dockerコンテナも公式にサポートされており、docker pullコマンドでダウンロードできます。
+今回は、Dockerコンテナを用いてpypiserverを構築します。
 
 https://hub.docker.com/r/pypiserver/pypiserver/tags/
 
 
-pyserver のコンテナはデフォルトでTCP/8080ポートで起動します。今回は `-p 8080:8080` オプションでローカルポートの8080番をここに割り当てるようにします。
+pyserverのコンテナは、デフォルトのTCP/8080ポートで起動します。今回は `-p 8080:8080` オプションを使い、ローカルポートの8080番をここに割り当てます。
 パッケージを保存するディレクトリをローカルのディレクトリでバインドマウントする場合は `-v ~/packages:/data/packages` オプションを追加します。
-検証を簡単にするため .htaccess による認証をスキップします。 `-a . -P .` オプションをつけることで認証を無効にしています。
+検証を簡単にするため .htaccessによる認証をスキップします。 `-a . -P .` オプションをつけることで認証を無効にしています。
 
 ```sh
 docker run -p 8080:8080 -v ~/packages:/data/packages pypiserver/pypiserver:latest run -a . -P . /data/packages
@@ -48,15 +48,15 @@ docker run -p 8080:8080 -v ~/packages:/data/packages pypiserver/pypiserver:lates
 
 # 自作パッケージを作成する
 
-pypiserver にアップロードするための自作パッケージを作成します。
-今回は、pypiserver の動作を確認することが目的であるため、ここではテスト用の単純なパッケージを作成します。
+pypiserverにアップロードするための自作パッケージを作成します。
+今回は、pypiserverの動作を確認することが目的であるため、ここではテスト用の単純なパッケージを作成します。
 
 ## パッケージとして配布するサンプルコードの作成
 
 今回、CLIとして実行可能なスクリプトを作成します。
 
 
-実行イメージ
+実行イメージ。
 
 ```sh
 $ sample-project
@@ -102,7 +102,7 @@ main.say()
 
 ## pyproject.toml の作成
 
-Python をパッケージングするための設定ファイルを記述します。
+Pythonをパッケージングするための設定ファイルを記述します。
 
 ```toml
 [build-system]
@@ -122,8 +122,8 @@ sample-project = "sample_project.main:say"
 ## パッケージの確認
 
 実際に動作するか確認してみましょう。
-つぎのコマンドでローカルのファイルをインストールすることができます。
-※必要に応じて venv など仮想環境を利用してください。
+つぎのコマンドでローカルのファイルをインストールできます。
+※必要に応じてvenvなど仮想環境を利用してください。
 
 ```sh
 pip install -e .
@@ -144,19 +144,19 @@ pip uninstall sample-project
 
 # pypiserver へパッケージをアップロードする
 
-pypiserver へパッケージをアップロードするにはいくつかの選択肢があります。
+pypiserverへパッケージをアップロードするにはいくつかの選択肢があります。
 
- - SCP などを利用し pypiserver に直接ファイルを配置する
- - setuptools を利用する
- - Twine を利用する
- - pypi-uploader を利用する
+ - SCPなどを利用しpypiserverに直接ファイルを配置する
+ - setuptoolsを利用する
+ - Twineを利用する
+ - pypi-uploaderを利用する
 
-今回は Twine を利用してアップロードする手順を記載します。
+今回はTwineを利用してアップロードする手順を記載します。
 
 ## Twine とは？
 
 PyPI (Pythonのパッケージリポジトリ) にPythonパッケージを公開するためのツールです。
-ビルドシステムに依存せず、ソースコードとバイナリ配布物をアップロードすることができます。
+ビルドシステムに依存せず、ソースコードとバイナリ配布物をアップロードできます。
 
 詳細についてはつぎの資料をご確認ください。
 
@@ -171,7 +171,7 @@ https://twine.readthedocs.io/en/stable/
 pip install build
 ```
 
-インストールした build を利用し、作成したパッケージをビルドします。
+インストールしたbuildを利用し、作成したパッケージをビルドします。
 
 ```sh
 python -m build .
@@ -187,7 +187,7 @@ python -m build .
 
 ## アップロード
 
-twine をインストールします。
+twineをインストールします。
 
 ```sh
 pip install twine
@@ -195,13 +195,13 @@ pip install twine
 
 パッケージをアップロードします。
 今回は、ローカルのPyPIサーバーへアップロードするため、 `--repository-url` オプションでローカルのPyPIサーバーのURLを指定します。
-最後の引数には前の手順でビルドしたパッケージファイルを指定します。コマンド実行時にユーザー名とパスワードの入力を促されますが、.htaccess の設定を行っていないため、そのまま Enter でOKです。
+最後の引数には前の手順でビルドしたパッケージファイルを指定します。コマンド実行時にユーザー名とパスワードの入力を促されますが、.htaccessを設定していないため、そのままEnterでOKです。
 
 ```sh
 twine upload --repository-url https://localhost:8080 dist/*
 ```
 
-http://localhost:8080/packages/ に接続するとアップロードしたパッケージを確認することができます。
+http://localhost:8080/packages/ に接続するとアップロードしたパッケージを確認できます。
 
 # ローカル pypiserver からpipインストールする
 
@@ -212,12 +212,12 @@ http://localhost:8080/packages/ に接続するとアップロードしたパッ
 pip install --extra-index-url http://localhost:8080 sample-project
 ```
 
-ちなみにつぎの環境変数を設定するか
+ちなみにつぎの環境変数を設定するか、` ~/.pip/pip.conf` に設定を書き込むことで、`--extra-index-url` オプションを省略できます。
+
+
 ```sh
 export PIP_EXTRA_INDEX_URL=http://localhost:8080/
 ```
-
-` ~/.pip/pip.conf` に設定を書き込むことで、`--extra-index-url` オプションを省略することができます。
 
 ```ini
 [global]
@@ -243,7 +243,8 @@ hello world!!
 
 # あとがき
 
-自分は基本的にGitHubのプライベートリポジトリから直接pipで引っ張ってくることが多いので正直そこまで必要ではないんですが、プライベートのpipリポジトリにはほかにも devpi や AWS CodeArtifact などいろいろと選択肢があるようです。
+自分は基本的にGitHubのプライベートリポジトリから直接pipで引っ張ってくることが多いので正直そこまで必要ではないんですが、
+プライベートのpipリポジトリにはほかにもdevpiやAWS CodeArtifactなどいろいろと選択肢があるようです。
 なんならただの静的サイトにパッケージ配置するだけでもよかったりするのでお好みに合わせて利用してください。
 
 # 参考

@@ -5,7 +5,7 @@ tags:
   - GithubEnterprise
   - GithubCLI
 private: false
-updated_at: '2025-05-13T21:57:20+09:00'
+updated_at: '2025-10-24T23:43:21+09:00'
 id: b91308633404042b977c
 organization_url_name: null
 slide: false

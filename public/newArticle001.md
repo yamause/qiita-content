@@ -4,7 +4,7 @@ tags:
   - Ansible
   - cloud-init
 private: true
-updated_at: '2025-12-08T00:40:20+09:00'
+updated_at: '2025-12-08T00:50:03+09:00'
 id: 29ca03be9b62a54c0b81
 organization_url_name: null
 slide: false

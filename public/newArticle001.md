@@ -1,7 +1,8 @@
 ---
 title: Ansible × cloud-init
 tags:
-  - ''
+  - 'Ansible'
+  - 'cloud-init'
 private: false
 updated_at: ''
 id: null
@@ -55,7 +56,7 @@ https://github.com/yamause/ansible-advent-calendar-2025/blob/main/playbooks/site
     - name: Display the Advent Calendar message using cowsay
       ansible.builtin.command: /usr/games/cowsay -f tux "Happy Holidays from Ansible Advent Calendar 2025!"
       register: cowsay_output
-      changed_when: cowsay_output.rc != 0
+      changed_when: false
 
     - name: Create a Advent Calendar message file
       ansible.builtin.copy:
@@ -109,7 +110,7 @@ ansible:
   # run_user: ansible-user
 ```
 
-`setup_controller.repositories`では、Ansible Playbookを格納しているリポジトリの情報を記述します。
+`setup_controller.repositories`では、Ansible Playbookを格納しているリポジトリの情報を記述します。`setup_controller`はAnsible Controllerモードを使用する設定で、このモードではリモートリポジトリからPlaybookをダウンロードして実行できます。
 
 - `source`: リモートリポジトリのURLを指定する。サンプルリポジトリは公開しているので、そのまま利用できる。
 - `path`: リポジトリをクローンするディレクトリパスを指定する。既存のパスを指定するとエラーになるため、まだ存在しないパスを指定すること。
@@ -150,7 +151,7 @@ UbuntuのAMIを利用して仮想マシンを作成します。
 
 仮想マシンを起動すると、自動的にcloud-initが実行されます。
 
-![alt text](img/newArticle001-01.png)
+![EC2インスタンス作成画面のユーザーデータ入力欄](img/newArticle001-01.png)
 
 ## 実行結果を確認しよう
 
@@ -164,6 +165,16 @@ status: done
 ```
 
 Playbookで定義したファイルが無事に作成されています！
+
+実行に失敗した場合は、以下のログファイルで詳細を確認できます。
+
+```sh
+# cloud-initの実行ログ
+$ sudo cat /var/log/cloud-init.log
+
+# cloud-initの出力ログ（Ansibleの実行結果も含む）
+$ sudo cat /var/log/cloud-init-output.log
+```
 
 ```sh
 $ cat /tmp/advent_message.txt
@@ -182,7 +193,7 @@ $ cat /tmp/advent_message.txt
     \___)=(___/
 ```
 
-## こんなときは？
+## 実践的な活用Tips
 
 ここからは運用するにあたってよく遭遇する疑問にお答えします。
 
@@ -210,11 +221,11 @@ ansible:
   setup_controller:
     ...
     run_ansible:
-      - playbook_name: hoge.yml
-        playbook_dir: /root/hoge/playbooks/
+      - playbook_name: production.yml
+        playbook_dir: /root/myapp/playbooks/
         vault_password_file: /root/.vault_pass.txt
-        inventory: /root/hoge/inventory/
-        limit: "hoge"
+        inventory: /root/myapp/inventory/
+        limit: "webservers"
 ```
 
 ソースコードを見ると、`run_ansible`に指定したキーと値がそのまま実行オプションとしてコマンドに渡されることがわかります。そのため、[cloud-init公式ドキュメント](https://cloudinit.readthedocs.io/en/latest/reference/modules.html#ansible)に記載されていないオプションも指定可能です。

@@ -1,5 +1,5 @@
 ---
-title: Ansible × cloud-init
+title: cloud-init × Ansible - VM作成時にAnsibleを自動実行しよう
 tags:
   - Ansible
   - cloud-init
@@ -11,11 +11,7 @@ slide: false
 ignorePublish: false
 ---
 
-# cloud-init × Ansible - VM作成時にAnsibleを自動実行しよう
-
 こちらはAnsible Advent Calendar 2025 14日目の記事です。
-
----
 
 クラウドやハイパーバイザーで作成した仮想マシンの初期構成を自動化する際、cloud-initを利用するケースが多くあります。
 

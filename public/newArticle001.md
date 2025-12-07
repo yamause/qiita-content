@@ -16,21 +16,21 @@ ignorePublish: true
 
 ---
 
-クラウドやハイパーバイザーなどから作成した仮想マシンの初期構成を自動化するためにcloud-initを利用することがよくあります。
+クラウドやハイパーバイザーで作成した仮想マシンの初期構成を自動化する際、cloud-initを利用するケースが多くあります。
 
-実はこのcloud-initでは[バージョン22.3](https://github.com/canonical/cloud-init/releases/tag/22.3)からAnsibleモジュールが公式に提供されており、これを利用することでcloud-initの処理の中でAnsibleを呼び出すことができます。
+cloud-initでは[バージョン22.3](https://github.com/canonical/cloud-init/releases/tag/22.3)からAnsibleモジュールが公式に提供されており、cloud-initの処理の中でAnsibleを実行できるようになりました。
 
 cloud-initだけでも十分ですが、Ansibleを呼び出すことで次の利点があります。
 
-- **高度な構成管理**: cloud-initだけを利用するよりもAnsibleの機能を使うことで複雑な構成を簡単に定義できる
-- **再利用がしやすい**: 既存のPlaybookやロールを再利用できる
-- **構成の一貫性**: cloud-initを利用できない環境のサーバーとも同じPlaybookを利用することで構成の一貫性を保てる
+- **高度な構成管理**: Ansibleの豊富な機能により、複雑な構成を簡潔に定義できる
+- **再利用性**: 既存のPlaybookやロールをそのまま活用できる
+- **構成の一貫性**: cloud-initを利用できない環境でも同じPlaybookを使用することで、構成管理を統一できる
 
 ## Ansible Playbookの準備
 
-今回の検証で利用するPlaybookを作成します。
+今回の検証で使用するPlaybookを作成します。
 
-サンプルコードは公開していますのでそのままご利用いただけます。
+サンプルコードはGitHubで公開していますので、そのまま利用できます。
 https://github.com/yamause/ansible-advent-calendar-2025/blob/main/playbooks/site.yml
 
 このPlaybookでは次のことを行います。
@@ -87,7 +87,7 @@ ansible:
         playbook_dir: /root/ansible-advent-calendar-2025/playbooks
 ```
 
-GitHubからAnsible Playbookをダウンロードしてくる必要があるため、事前にgitをインストールします。
+GitHubからAnsible Playbookをダウンロードするため、事前にgitをインストールします。
 
 ```yaml
 package_update: true
@@ -98,9 +98,9 @@ packages:
 
 `install_method` はAnsibleをインストールする方法を `distro` または `pip` から選択します。
 
-distroの場合は、aptなどのパッケージ管理ツールでインストールします。
+`distro`を選択すると、aptなどのパッケージ管理ツールを使ってインストールします。
 
-pipの場合は `run_user` を指定しているかどうかによって動作が変わります。指定されている場合は指定したユーザーのユーザー空間にインストールします。指定されていない場合はシステムPythonにインストールします。
+`pip`を選択した場合、`run_user`の指定有無で動作が異なります。ユーザーを指定した場合はそのユーザーの環境にインストールし、指定しない場合はシステム全体のPython環境にインストールします。
 
 ```yaml
 ansible:
@@ -109,10 +109,10 @@ ansible:
   # run_user: ansible-user
 ```
 
-`setup_controller.repositories` はAnsible Playbookを格納しているリポジトリの情報を記述します。
+`setup_controller.repositories`では、Ansible Playbookを格納しているリポジトリの情報を記述します。
 
-`source` はリモートリポジトリのURLを指定します。下記サンプルコードのリポジトリは公開していますので、そのままご利用いただけます。
-`path` はリポジトリを保存するディレクトリパスを指定します。既存のパスを選択するとエラーになってしまうため、まだ作成されていないディレクトリパスを指定してください。
+- `source`: リモートリポジトリのURLを指定する。サンプルリポジトリは公開しているので、そのまま利用できる。
+- `path`: リポジトリをクローンするディレクトリパスを指定する。既存のパスを指定するとエラーになるため、まだ存在しないパスを指定すること。
 
 ```yaml
 ansible:
@@ -123,10 +123,10 @@ ansible:
         path: /root/ansible-advent-calendar-2025
 ```
 
-`setup_controller.run_ansible` は実行するPlaybookと実行パスを指定します。
+`setup_controller.run_ansible`では、実行するPlaybookと実行ディレクトリを指定します。
 
-`playbook_name` 実行するPlaybookを指定します。
-`playbook_dir` Playookが格納されているディレクトリパスを指定します。
+- `playbook_name`: 実行するPlaybookのファイル名を指定する。
+- `playbook_dir`: Playbookが格納されているディレクトリパスを指定する。
 
 ```yaml
 ansible:
@@ -144,11 +144,11 @@ ansible:
 
 UbuntuのAMIを利用して仮想マシンを作成します。
 
-ちなみにAmazon Linux 2023でも試してみたんですが、cloud-initのバージョンが22.2でまだAnsibleモジュールの実装のないバージョンでした。
+なお、Amazon Linux 2023でも試しましたが、cloud-initのバージョンが22.2であり、Ansibleモジュールが実装されていませんでした。
 
-**高度な詳細** のトグルを開き画面を下のほうにスクロールすると **ユーザーデータ - オプション** があります。個々のテキストボックスに先ほどのcloud-configを張り付けるかファイルからアップロードしてください。
+**高度な詳細**のトグルを開き、画面下部の**ユーザーデータ - オプション**へ先ほどのcloud-configを貼り付けるか、ファイルからアップロードしてください。
 
-あとは仮想マシンを起動したら自動的にcloud-initが実行されます。
+仮想マシンを起動すると、自動的にcloud-initが実行されます。
 
 ![alt text](img/newArticle001-01.png)
 
@@ -156,7 +156,7 @@ UbuntuのAMIを利用して仮想マシンを作成します。
 
 先ほど作成した仮想マシンにログインします。
 
-cloud-init statusコマンドで現在の実行状況がわかります。 `status: done` となっていれば実行が完了しています。
+`cloud-init status`コマンドで現在の実行状況を確認できます。`status: done`と表示されていれば、実行が完了しています。
 
 ```sh
 $ cloud-init status
@@ -188,8 +188,8 @@ $ cat /tmp/advent_message.txt
 
 ### Ansible Galaxyからコレクションやロールをインストールしたい
 
-標準外のコレクションを利用したい場合は、インストールする必要があります。
-下記の例では、依存するコレクションとnewrelicのロールをAnsible Galaxyでインストールしています。
+標準外のコレクションを利用する場合は、事前にインストールが必要です。
+以下の例では、依存するコレクションとnewrelicのロールをAnsible Galaxyからインストールしています。
 
 ```yaml
 ansible:
@@ -202,7 +202,7 @@ ansible:
 
 ### Ansibleの実行オプションを指定したい
 
-ansible-playbookの実行オプションを指定するには `run_ansible` の下で指定します。
+`ansible-playbook`の実行オプションは、`run_ansible`配下で指定できます。
 
 ```yaml
 ansible:
@@ -217,7 +217,7 @@ ansible:
         limit: "hoge"
 ```
 
-これはソースコードを確認するとわかるのですが、run_ansibleに与えられたキーと値をそのまま実行オプションとしてコマンドに渡しています。そのため、[cloud-init公式ドキュメント](https://cloudinit.readthedocs.io/en/latest/reference/modules.html#ansible)に記載されているオプション以外も指定できます。
+ソースコードを見ると、`run_ansible`に指定したキーと値がそのまま実行オプションとしてコマンドに渡されることがわかります。そのため、[cloud-init公式ドキュメント](https://cloudinit.readthedocs.io/en/latest/reference/modules.html#ansible)に記載されていないオプションも指定可能です。
 
 ```python
 def ansible_controller(cfg: dict, ansible: AnsiblePull):
@@ -240,12 +240,12 @@ def ansible_controller(cfg: dict, ansible: AnsiblePull):
 
 ### GitHubリポジトリに認証が必要な場合
 
-リポジトリを非公開（PrivateまたはInternal）にしている場合、リポジトリをダウンロードするのに認証が必要になります。
+リポジトリを非公開（PrivateまたはInternal）にしている場合、ダウンロード時に認証が必要です。
 
-GitHubの場合、Personal Access Token（PAT）をURLに挿入することで認証を通すことができます。
-リポジトリの読み取り権限があれば十分ですので、PATを発行する際は必要最小限の権限を設定してください。
+GitHubの場合、Personal Access Token（PAT）をURLに埋め込むことで認証できます。
+リポジトリの読み取り権限があれば十分なので、PATを発行する際は必要最小限の権限を設定してください。
 
-ただし、この方法の場合だとcloud-init.logにURLと一緒にPATが出力されてしまいます。
+ただし、この方法ではcloud-init.logにURLとともにPATが記録されてしまう点に注意が必要です。
 
 ```yaml
 ansible:
@@ -256,8 +256,8 @@ ansible:
         path: /root/ansible-advent-calendar-2025
 ```
 
-もしログに認証情報を出力させたくない場合は、事前に認証情報をGitの設定に登録しておく方法があります。
-ただし、こちらもcloud-configや.git-credentialsに平文で保存されることになるので取り扱いには十分に注意してください。
+ログに認証情報を記録したくない場合は、事前にGitの設定に認証情報を登録する方法があります。
+ただし、この方法でもcloud-configや.git-credentialsに平文で保存されるため、取り扱いには十分注意してください。
 
 ほかにいい方法があれば教えてください！
 
@@ -282,9 +282,9 @@ write_files:
 
 ## あとがき
 
-私は自宅で運用しているProxmoxVEの構成管理をTerraformで行っています。それとあわせてcloud-initを利用してAnsibleを呼び出すことでVMの作成から初期設定までを完全に自動化できています。
+私は自宅で運用しているProxmox VEの構成管理をTerraformで行っています。それとあわせてcloud-initからAnsibleを呼び出すことで、VMの作成から初期設定までを完全に自動化しています。
 
-terraform applyを実行するだけで、すべての設定が終わるためVMを構成するときの手順を意識する必要がなくとても快適です。この記事が皆様のインフラ自動化のヒントになれば幸いです。
+`terraform apply`を実行するだけですべての設定が完了するため、構築手順を意識する必要がなく非常に快適です。この記事が皆様のインフラ自動化のヒントになれば幸いです。
 
 ## 参考
 

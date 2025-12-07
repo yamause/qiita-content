@@ -110,7 +110,7 @@ ansible:
   # run_user: ansible-user
 ```
 
-`setup_controller.repositories`では、Ansible Playbookを格納しているリポジトリの情報を記述します。`setup_controller`はAnsible Controllerモードを使用する設定で、このモードではリモートリポジトリからPlaybookをダウンロードして実行できます。
+`setup_controller.repositories`では、Ansible Playbookを格納しているリポジトリの情報を記述します。`setup_controller`はPlaybookの実行環境をセットアップする設定で、GitリポジトリからPlaybookをダウンロードし、このホスト上で`ansible-playbook`コマンドを実行します。
 
 - `source`: リモートリポジトリのURLを指定する。サンプルリポジトリは公開しているので、そのまま利用できる。
 - `path`: リポジトリをクローンするディレクトリパスを指定する。既存のパスを指定するとエラーになるため、まだ存在しないパスを指定すること。

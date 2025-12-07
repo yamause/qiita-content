@@ -3,12 +3,12 @@ title: Ansible × cloud-init
 tags:
   - 'Ansible'
   - 'cloud-init'
-private: false
+private: true
 updated_at: ''
 id: null
 organization_url_name: null
 slide: false
-ignorePublish: true
+ignorePublish: false
 ---
 
 # cloud-init × Ansible - VM作成時にAnsibleを自動実行しよう

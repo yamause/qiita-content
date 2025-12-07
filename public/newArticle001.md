@@ -1,11 +1,11 @@
 ---
 title: Ansible × cloud-init
 tags:
-  - 'Ansible'
-  - 'cloud-init'
+  - Ansible
+  - cloud-init
 private: true
-updated_at: ''
-id: null
+updated_at: '2025-12-08T00:40:20+09:00'
+id: 29ca03be9b62a54c0b81
 organization_url_name: null
 slide: false
 ignorePublish: false
